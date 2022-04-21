@@ -3,67 +3,6 @@ import torch
 import time
 import copy
 
-'''
-#Just for testing purposes
-class SGD(torch.optim.Optimizer):
-    def __init__(self,
-                 params):
-
-        params = list(params)
-        super().__init__(params, {})
-        self.params = params
-
-        self.state['step'] = 0
-
-    def step(self, closure=None, loss=None, batch=None):
-        if loss is None and closure is None:
-            raise ValueError('please specify either closure or loss')
-
-        if loss is not None:
-            if not isinstance(loss, torch.Tensor):
-                loss = torch.tensor(loss)
-
-        # increment step
-        self.state['step'] += 1
-
-
-        if loss is None:
-            loss = closure()
-        else:
-            assert closure is None, 'if loss is provided then closure should be None'
-
-        # save the current parameters:
-
-        #grads = get_grad_list(self.params)
-
-
-        ##This is another (not ideal) way to do the line below:
-        #grads = torch.autograd.grad(loss, self.params, create_graph=True)
-
-        grads = [p.grad for p in self.params]
-
-        grad_norm_sq = norm_sq(grads)
-
-        hessian_grad = torch.autograd.grad(grads, self.params, grad_outputs=grads)
-        #print("hessian_grad: ", len(hessian_grad))
-
-        step_size = 0.001
-
-        # update with step size
-        sgd_update(self.params, step_size, grads)
-
-        # update state with metrics
-        #self.state['n_forwards'] += 1
-        #self.state['n_backwards'] += 1
-        self.state['step_size'] = step_size
-        #self.state['grad_norm'] = grad_norm.item()
-
-        if torch.isnan(self.params[0]).sum() > 0:
-            raise ValueError('Got NaNs')
-
-        return float(loss)
-'''
-
 class SP2_base(torch.optim.Optimizer):
 
     def __init__(self, params):
@@ -237,20 +176,6 @@ class SP2max_plus(SP2_base):
 
         return w_step
 
-'''def get_grad_list(params):
-    grad_list = []
-    for p in params:
-        g = p.grad
-        if g is None:
-            raise ValueError('Got None for a gradient')
-        else:
-            g = p.grad.data
-            g.requires_grad = True
-                   
-        grad_list += [g]        
-                   
-    return grad_list
-'''
 pos = lambda x: x if x>0 else 0
 
 def norm(v):
@@ -264,11 +189,5 @@ def inner_prod(v, w):
 
 def update_params(params, step):
     for p,g in zip(params, step):
-        p.data.add_(other = -g)
-
-#def sgd_update(params, step_size, grad_current):
-#    for p, g in zip(params, grad_current):
-#        p.data.add_(other=g, alpha=- step_size)
-
-
+        p.data.add_(other = -g) #note the minus sign
 
