@@ -177,6 +177,8 @@ def run_experiment(model, optimizer, trainloader, testloader,
 #####################################################################
 mnist_trainloader, mnist_testloader = load_MNIST(batch_size=50)
 small_model = Small_Model()
+med_model = Medium_Model()
+
 
 testparams = {
 "model":small_model, 
@@ -225,13 +227,54 @@ SP2l2_small = {
 "exp_name":"SP2l2_small", 
 "info": "lmda=0.5, init_s=1"}
 
+########################################
 
-run_experiment(**SGDparams)
+SGD_medium = {
+"model":med_model, 
+"optimizer":sps_optimizers.SGD_test(med_model.parameters()), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SGD_med", 
+"info": "step size 0.001"}
 
+SP2max_med = {
+"model":med_model, 
+"optimizer":sps_optimizers.SP2max_plus(med_model.parameters(), lmda=0.5), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_med", 
+"info": "lmda=0.5"}
+
+SP2l1_med = {
+"model":med_model, 
+"optimizer":sps_optimizers.SP2L1_plus(med_model.parameters(), lmda=0.5, init_s=1), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2l1_med", 
+"info": "lmda=0.5, init_s=1"}
+
+SP2l2_med = {
+"model":med_model, 
+"optimizer":sps_optimizers.SP2L2_plus(med_model.parameters(), lmda=0.5, init_s=1),
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2l2_med", 
+"info": "lmda=0.5, init_s=1"}
+
+
+#run_experiment(**SGDparams)
 #run_experiment(**SP2max_small)
 #run_experiment(**SP2l1_small)
 #run_experiment(**SP2l2_small)
 
+run_experiment(**SGD_med)
+run_experiment(**SP2max_med)
+run_experiment(**SP2l1_med)
+run_experiment(**SP2l2_med)
 
 
 
