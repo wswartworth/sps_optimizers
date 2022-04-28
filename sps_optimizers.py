@@ -61,7 +61,7 @@ class SGD_test(SP2_base):
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
-        step = [0.01*g for g in grads]
+        step = [0.001*g for g in grads]
         return step
 
 class SP2_plus(SP2_base):
