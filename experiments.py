@@ -337,6 +337,48 @@ SP2max_small_lmda_1 = {
 "exp_name":"SP2max_small_lmda_0.1", 
 "info": "lmda=0.1, stepsize=1"}
 
+################################## momentum ###############################
+
+SP2max_small_beta_9 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.5,
+  stepsize=1, beta=0.9), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_beta_0.9", 
+"info": "lmda=0.5, stepsize=1, beta=0.9"}
+
+SP2max_small_beta_5 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.5,
+  stepsize=1, beta=0.5), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_beta_0.5", 
+"info": "lmda=0.5, stepsize=1, beta=0.5"}
+
+SP2max_small_beta_0 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.5,
+  stepsize=1, beta=0.0), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_beta_0.0", 
+"info": "lmda=0.5, stepsize=1, beta=0.0"}
+
+
+SP2max_small_beta_1 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.5,
+  stepsize=1, beta=0.1), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_beta_0.1", 
+"info": "lmda=0.5, stepsize=1, beta=0.1"}
 
 #run_experiment(**SGDparams)
 #run_experiment(**SP2max_small)
@@ -353,7 +395,14 @@ SP2max_small_lmda_1 = {
 #run_experiment(**SP2max_small_sz_vsmall)
 
 #run_experiment(**SP2max_small_lmda_1)
-run_experiment(**SP2max_small_lmda_5)
+#run_experiment(**SP2max_small_lmda_5)
 #run_experiment(**SP2max_small_lmda_9)
+
+#run_experiment(**SP2max_small_beta_9)
+#run_experiment(**SP2max_small_beta_5)
+#run_experiment(**SP2max_small_beta_0)
+run_experiment(**SP2max_small_beta_1)
+
+
 
 

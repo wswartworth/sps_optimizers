@@ -5,14 +5,26 @@ import copy
 
 class SP2_base(torch.optim.Optimizer):
 
-    def __init__(self, params, stepsize=1):
+    def __init__(self, params, stepsize=1, beta=0):
 
         params = list(params)
         super().__init__(params, {})
         self.params = params
 
         self.state['step'] = 0
+
         self.stepsize = stepsize
+
+        #momentum
+        zero_fill = [torch.zeros_like(w_i) for w_i in params]
+        self.last_two_steps = [zero_fill, zero_fill] #most recent step, followed by the previous step
+        self.beta = beta
+
+    def update_momentum(self, step):
+        self.last_two_steps[0], self.last_two_steps[1] = step, self.last_two_steps[0]
+
+    def get_momentum(self):
+        return [self.beta * (a-b) for a,b in zip(self.last_two_steps[0], self.last_two_steps[1])]
 
     def step(self, closure=None, loss=None):
 
@@ -34,7 +46,14 @@ class SP2_base(torch.optim.Optimizer):
 
         self.compute_grad_info()
         step = self.compute_step(float(loss))
+
+        inertia_term = self.get_momentum() #add on the momentum term
+        for step_i, m_i in zip(step, inertia_term):
+          step_i.add_(m_i)
+
         update_params(self.params, step, stepsize=self.stepsize)
+
+        self.update_momentum(step) #update the last two steps used to compute momentum
 
         if torch.isnan(self.params[0]).sum() > 0:
             raise ValueError('Got NaNs')
@@ -67,8 +86,8 @@ class SGD_test(SP2_base):
 
 class SP2_plus(SP2_base):
 
-    def __init__(self, params, stepsize=1):
-        super().__init__(params, stepsize=stepsize)
+    def __init__(self, params, stepsize=1, beta=0):
+        super().__init__(params, stepsize=stepsize, beta=beta)
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
@@ -81,8 +100,8 @@ class SP2_plus(SP2_base):
 
 class SP2L1_plus(SP2_base):
 
-    def __init__(self, params, lmda, init_s, stepsize=1):
-        super().__init__(params, stepsize=stepsize)
+    def __init__(self, params, lmda, init_s, stepsize=1, beta=0):
+        super().__init__(params, stepsize=stepsize, beta=beta)
         self.lmda = lmda
         self.s = init_s
     
@@ -120,8 +139,8 @@ class SP2L1_plus(SP2_base):
 
 class SP2L2_plus(SP2_base):
 
-    def __init__(self, params, lmda, init_s, stepsize=1):
-        super().__init__(params, stepsize=stepsize)
+    def __init__(self, params, lmda, init_s, stepsize=1, beta=0):
+        super().__init__(params, stepsize=stepsize, beta=beta)
         self.lmda = lmda
         self.s = init_s
     
@@ -152,8 +171,8 @@ class SP2L2_plus(SP2_base):
 
 class SP2max_plus(SP2_base):
 
-    def __init__(self, params, lmda, stepsize=1):
-        super().__init__(params, stepsize=stepsize)
+    def __init__(self, params, lmda, stepsize=1, beta=0):
+        super().__init__(params, stepsize=stepsize, beta=beta)
         self.lmda = lmda
 
     def compute_step(self, loss):
