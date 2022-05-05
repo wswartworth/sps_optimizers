@@ -5,13 +5,14 @@ import copy
 
 class SP2_base(torch.optim.Optimizer):
 
-    def __init__(self, params):
+    def __init__(self, params, stepsize=1):
 
         params = list(params)
         super().__init__(params, {})
         self.params = params
 
         self.state['step'] = 0
+        self.stepsize = stepsize
 
     def step(self, closure=None, loss=None):
 
@@ -33,7 +34,7 @@ class SP2_base(torch.optim.Optimizer):
 
         self.compute_grad_info()
         step = self.compute_step(float(loss))
-        update_params(self.params, step)
+        update_params(self.params, step, stepsize=self.stepsize)
 
         if torch.isnan(self.params[0]).sum() > 0:
             raise ValueError('Got NaNs')
@@ -56,8 +57,8 @@ class SGD_test(SP2_base):
 
     '''Implements SGD by subclassing SP2_base for testing purposes'''
 
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, params, stepsize=1):
+        super().__init__(params, stepsize=stepsize)
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
@@ -66,8 +67,8 @@ class SGD_test(SP2_base):
 
 class SP2_plus(SP2_base):
 
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, params, stepsize=1):
+        super().__init__(params, stepsize=stepsize)
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
@@ -80,8 +81,8 @@ class SP2_plus(SP2_base):
 
 class SP2L1_plus(SP2_base):
 
-    def __init__(self, params, lmda, init_s):
-        super().__init__(params)
+    def __init__(self, params, lmda, init_s, stepsize=1):
+        super().__init__(params, stepsize=stepsize)
         self.lmda = lmda
         self.s = init_s
     
@@ -119,8 +120,8 @@ class SP2L1_plus(SP2_base):
 
 class SP2L2_plus(SP2_base):
 
-    def __init__(self, params, lmda, init_s):
-        super().__init__(params)
+    def __init__(self, params, lmda, init_s, stepsize=1):
+        super().__init__(params, stepsize=stepsize)
         self.lmda = lmda
         self.s = init_s
     
@@ -151,8 +152,8 @@ class SP2L2_plus(SP2_base):
 
 class SP2max_plus(SP2_base):
 
-    def __init__(self, params, lmda):
-        super().__init__(params)
+    def __init__(self, params, lmda, stepsize=1):
+        super().__init__(params, stepsize=stepsize)
         self.lmda = lmda
 
     def compute_step(self, loss):
@@ -187,7 +188,8 @@ def inner_prod(v, w):
     return torch.sum(torch.stack([ torch.dot(torch.flatten(v_i), torch.flatten(w_i)) 
               for v_i,w_i in zip(v,w)]))
 
-def update_params(params, step):
+def update_params(params, step, stepsize=1):
+
     for p,g in zip(params, step):
-        p.data.add_(other = -g) #note the minus sign
+        p.data.add_(other = -stepsize*g) #note the minus sign
 
