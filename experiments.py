@@ -337,6 +337,16 @@ SP2max_small_lmda_1 = {
 "exp_name":"SP2max_small_lmda_0.1", 
 "info": "lmda=0.1, stepsize=1"}
 
+SP2max_small_lmda_01 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.01,
+  stepsize=1), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_lmda_0.01", 
+"info": "lmda=0.01, stepsize=1"}
+
 ################################## momentum ###############################
 
 SP2max_small_beta_9 = {
@@ -358,6 +368,16 @@ SP2max_small_beta_5 = {
 "n_epochs":epochs, 
 "exp_name":"SP2max_small_beta_0.5", 
 "info": "lmda=0.5, stepsize=1, beta=0.5"}
+
+SP2max_small_beta_3 = {
+"model":small_model, 
+"optimizer":sps_optimizers.SP2max_plus(small_model.parameters(), lmda=0.5,
+  stepsize=1, beta=0.3), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SP2max_small_beta_0.3", 
+"info": "lmda=0.5, stepsize=1, beta=0.3"}
 
 SP2max_small_beta_0 = {
 "model":small_model, 
@@ -394,6 +414,7 @@ SP2max_small_beta_1 = {
 #run_experiment(**SP2max_small_sz_small)
 #run_experiment(**SP2max_small_sz_vsmall)
 
+#run_experiment(**SP2max_small_lmda_01)
 #run_experiment(**SP2max_small_lmda_1)
 #run_experiment(**SP2max_small_lmda_5)
 #run_experiment(**SP2max_small_lmda_9)
@@ -401,7 +422,9 @@ SP2max_small_beta_1 = {
 #run_experiment(**SP2max_small_beta_9)
 #run_experiment(**SP2max_small_beta_5)
 #run_experiment(**SP2max_small_beta_0)
-run_experiment(**SP2max_small_beta_1)
+run_experiment(**SP2max_small_beta_3)
+
+#run_experiment(**SP2max_small_beta_1)
 
 
 
