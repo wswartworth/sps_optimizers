@@ -572,12 +572,12 @@ SGD_med_sz_01 = {
 #####run_experiment(**SP2l2_small_lmda_small)
 #####run_experiment(**SP2l2_small_lmda_vsmall)
 #####run_experiment(**SP2l2_med_lmda_small)
-run_experiment(**SP2l2_med_lmda_vsmall)
+#####run_experiment(**SP2l2_med_lmda_vsmall)
 
 #####run_experiment(**SP2l1_small_lmda_small)
 #####run_experiment(**SP2l1_small_lmda_vsmall)
 #####run_experiment(**SP2l1_med_lmda_small) ?????
-#run_experiment(**SP2l1_med_lmda_vsmall)
+run_experiment(**SP2l1_med_lmda_vsmall)
 
 
 #####run_experiment(**SGD_small_sz_01)
