@@ -76,12 +76,12 @@ class SGD_test(SP2_base):
 
     '''Implements SGD by subclassing SP2_base for testing purposes'''
 
-    def __init__(self, params, stepsize=1):
-        super().__init__(params, stepsize=stepsize)
+    def __init__(self, params, stepsize=1, beta=0):
+        super().__init__(params, stepsize=stepsize, beta=beta)
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
-        step = [0.001*g for g in grads]
+        step = grads #note that stepsize is used by the base class
         return step
 
 class SP2_plus(SP2_base):
@@ -139,7 +139,7 @@ class SP2L1_plus(SP2_base):
 
 class SP2L2_plus(SP2_base):
 
-    def __init__(self, params, lmda, init_s, stepsize=1, beta=0):
+    def __init__(self, params, lmda, init_s=1, stepsize=1, beta=0):
         super().__init__(params, stepsize=stepsize, beta=beta)
         self.lmda = lmda
         self.s = init_s
