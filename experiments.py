@@ -561,9 +561,29 @@ SGD_med_sz_01 = {
 "exp_name":"SGD_med_sz_0.01", 
 "info": "stepsize=0.01, beta=0.3"}
 
+######################### SPS1 #########################
+SPS1_med_lmda_small = {
+"model": med_model, 
+"optimizer":sps_optimizers.SPS1_max(med_model.parameters(), lmda=0.1,
+  stepsize=1, beta=0.3), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SPS1_med_lmda_0.1", 
+"info": "lmda=0.1, stepsize=1, beta=0.3"}
+
+SPS1_small_lmda_small = {
+"model": small_model, 
+"optimizer":sps_optimizers.SPS1_max(small_model.parameters(), lmda=0.1,
+  stepsize=1, beta=0.3), 
+"trainloader":mnist_trainloader,
+"testloader": mnist_testloader, 
+"n_epochs":epochs, 
+"exp_name":"SPS1_small_lmda_0.1", 
+"info": "lmda=0.1, stepsize=1, beta=0.3"}
 
 
-
+run_experiment(**SPS1_med_lmda_small)
 #####run_experiment(**SP2max_small_lmda_small)
 #####run_experiment(**SP2max_small_lmda_vsmall)
 #####run_experiment(**SP2max_med_lmda_small) ????????
@@ -577,7 +597,7 @@ SGD_med_sz_01 = {
 #####run_experiment(**SP2l1_small_lmda_small)
 #####run_experiment(**SP2l1_small_lmda_vsmall)
 #####run_experiment(**SP2l1_med_lmda_small) ?????
-run_experiment(**SP2l1_med_lmda_vsmall)
+#####run_experiment(**SP2l1_med_lmda_vsmall)
 
 
 #####run_experiment(**SGD_small_sz_01)

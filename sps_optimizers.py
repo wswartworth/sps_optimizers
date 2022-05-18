@@ -84,17 +84,30 @@ class SGD_test(SP2_base):
         step = grads #note that stepsize is used by the base class
         return step
 
-class SP2_plus(SP2_base):
 
-    def __init__(self, params, stepsize=1, beta=0):
+class SPS1_max(SP2_base):
+
+    def __init__(self, params, lmda=1, stepsize=1, beta=0):
         super().__init__(params, stepsize=stepsize, beta=beta)
+        self.lmda = lmda
 
     def compute_step(self, loss):
         grads, hessian_grad = self.grads, self.hessian_grad
-
-
-
+        step_scale = min(1/(norm(grads)**2 + 1e-6), self.lmda)
+        step = [step_scale * g for g in grads]
         return step
+
+#class SP2_plus(SP2_base):
+
+#    def __init__(self, params, stepsize=1, beta=0):
+#        super().__init__(params, stepsize=stepsize, beta=beta)
+
+ #   def compute_step(self, loss):
+ #       grads, hessian_grad = self.grads, self.hessian_grad
+
+
+
+#      return step
 
 
 
